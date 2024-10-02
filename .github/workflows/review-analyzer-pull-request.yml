@@ -3,7 +3,7 @@ name: Continuous Integration - Review Analyzer
 on:
   pull_request:
     paths:
-      - 'review-collector/**'
+      - 'review-analyzer/**'
     branches: ["main"]
 
 jobs:
@@ -21,15 +21,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: build.gradle
+          cache: gradle
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
       - name: Build with Gradle
-        run: ./gradlew :review-collector:build
+        run: ./gradlew :review-analyzer:build
 
       - name: Test with Gradle
-        run: ./gradlew :review-collector:test
+        run: ./gradlew :review-analyzer:test
 
