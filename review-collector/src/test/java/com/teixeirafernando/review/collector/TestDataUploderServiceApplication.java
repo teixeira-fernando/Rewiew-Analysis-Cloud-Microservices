@@ -2,7 +2,7 @@ package com.teixeirafernando.review.collector;
 
 import org.springframework.boot.SpringApplication;
 
-import java.com.teixeirafernando.review.collector.ReviewCollectorServiceApplication;
+import com.teixeirafernando.review.collector.ReviewCollectorServiceApplication;
 
 public class TestDataUploderServiceApplication {
 

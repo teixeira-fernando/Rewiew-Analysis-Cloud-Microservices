@@ -21,10 +21,6 @@ repositories {
     mavenCentral()
 }
 
-springBoot {
-    mainClass = 'com.teixeirafernando.review.collector.ReviewCollectorServiceApplication'
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok'
