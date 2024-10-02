@@ -8,7 +8,7 @@ public class ReviewAnalyzerServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ReviewAnalyzerServiceApplication.class, args);
-		System.out.println("Application started...");
+		System.out.println("Application started!");
 	}
 
 }
