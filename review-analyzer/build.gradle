@@ -4,16 +4,43 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
-bootJar {
-    enabled = false
+group = 'com.teixeirafernando'
+version = '0.0.1-SNAPSHOT'
+
+/*java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}*/
+
+java {
+    sourceCompatibility = '17'
 }
 
-jar {
-    enabled = true
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+springBoot {
+    mainClass = 'com.teixeirafernando.review.analyzer.ReviewAnalyzerServiceApplication'
 }
 
 dependencies {
-    //compile project(':common')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
 
-    //implementation 'org.apache.commons:commons-math3:3.6.1'
+tasks.named('test') {
+    useJUnitPlatform()
 }
