@@ -41,11 +41,16 @@ tasks.named('test') {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = group
             artifactId = 'review.colletor'
-            version = version
-
             from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
         }
     }
     repositories {
