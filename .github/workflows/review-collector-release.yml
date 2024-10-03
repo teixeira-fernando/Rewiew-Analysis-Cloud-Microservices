@@ -60,8 +60,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry  # Optional: Enable caching to speed up builds
-          cache-to: type=registry,mode=max  # Optional: Save cache to registry
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
