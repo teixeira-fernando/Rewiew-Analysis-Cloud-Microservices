@@ -1,4 +1,4 @@
-name: Continuous Integration - Review Analyzer
+name: Continuous Integration - Review Collector
 
 on:
   pull_request:
