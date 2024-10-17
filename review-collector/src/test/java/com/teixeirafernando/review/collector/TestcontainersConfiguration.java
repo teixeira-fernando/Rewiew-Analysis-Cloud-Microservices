@@ -18,7 +18,7 @@ class TestcontainersConfiguration {
     static void setup() {
         try {
             var container = new LocalStackContainer(
-                    DockerImageName.parse("localstack/localstack:3.0")
+                    DockerImageName.parse("localstack/localstack:3.8.1")
             );
             container.start();
 
