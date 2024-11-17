@@ -13,6 +13,6 @@ public class ReviewCollectorService {
     }
 
     public void publish(String queueName, Review review) {
-        sqsTemplate.sendAsync(to -> to.queue(queueName).payload(review));
+        sqsTemplate.sendAsync(queueName,review);
     }
 }
