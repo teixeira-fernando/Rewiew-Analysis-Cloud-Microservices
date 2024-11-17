@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
@@ -13,6 +14,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+@SpringBootTest(
+		classes = ReviewCollectorServiceApplication.class,
+		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @Testcontainers
 class ReviewCollectorServiceApplicationTests extends TestContainersConfiguration {
 

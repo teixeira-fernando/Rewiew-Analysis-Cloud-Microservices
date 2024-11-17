@@ -12,10 +12,6 @@ import java.util.UUID;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS;
 
-@SpringBootTest(
-        classes = ReviewCollectorServiceApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
 public abstract class TestContainersConfiguration {
 
     @Container
@@ -50,6 +46,25 @@ public abstract class TestContainersConfiguration {
         registry.add(
                 "spring.cloud.aws.sqs.endpoint",
                 () -> localStack.getEndpointOverride(SQS).toString()
+        );
+
+        System.setProperty("app.bucket", BUCKET_NAME);
+        System.setProperty("app.queue", QUEUE_NAME);
+        System.setProperty(
+                "spring.cloud.aws.region.static",
+                localStack.getRegion()
+        );
+        System.setProperty(
+                "spring.cloud.aws.credentials.access-key",
+                localStack.getAccessKey()
+        );
+        System.setProperty(
+                "spring.cloud.aws.credentials.secret-key",
+                localStack.getSecretKey()
+        );
+        System.setProperty(
+                "spring.cloud.aws.endpoint",
+                localStack.getEndpoint().toString()
         );
     }
 

@@ -1,11 +1,13 @@
 package com.teixeirafernando.review.collector.integration;
 
-import com.teixeirafernando.review.collector.Review;
-import com.teixeirafernando.review.collector.ReviewCollectorController;
-import com.teixeirafernando.review.collector.TestContainersConfiguration;
+import com.teixeirafernando.review.collector.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -18,12 +20,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith({SpringExtension.class})
+@AutoConfigureMockMvc
+@SpringBootTest
 @Testcontainers
-@WebMvcTest(ReviewCollectorController.class)
-public class ReviewCollectorIntegrationTest extends TestContainersConfiguration {
+public class ReviewCollectorIntegrationTest extends TestContainersConfiguration{
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ApplicationProperties properties;
+
+    @Autowired
+    ReviewCollectorService reviewCollectorService;
 
     @Test
     @DisplayName("POST /api/review - Success")
@@ -43,7 +53,7 @@ public class ReviewCollectorIntegrationTest extends TestContainersConfiguration 
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(review.toString())))
                 .andExpect(status().isOk()) //validate 200 response code
-                .andExpect(jsonPath("$.id").value(review.id().toString())); //validate response body
+                .andExpect(jsonPath("$.id").value(review.id().toString()));//validate response body
 
     }
 }
