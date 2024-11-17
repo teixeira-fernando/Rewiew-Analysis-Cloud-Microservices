@@ -16,7 +16,7 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
         classes = ReviewCollectorServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-abstract class TestContainersConfiguration {
+public abstract class TestContainersConfiguration {
 
     @Container
     static LocalStackContainer localStack = new LocalStackContainer(
