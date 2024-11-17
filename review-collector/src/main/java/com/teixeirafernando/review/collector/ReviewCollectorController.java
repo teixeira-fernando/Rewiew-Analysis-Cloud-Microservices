@@ -2,9 +2,11 @@ package com.teixeirafernando.review.collector;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@RestController
 public class ReviewCollectorController {
 
     private final ReviewCollectorService reviewCollectorService;
@@ -18,6 +20,6 @@ public class ReviewCollectorController {
     @PostMapping("/api/review")
     public Map<String, String> create(@RequestBody Review review) {
         reviewCollectorService.publish(properties.queue(), review);
-        return Map.of("uuid", review.uuid().toString());
+        return Map.of("id", review.id().toString());
     }
 }
