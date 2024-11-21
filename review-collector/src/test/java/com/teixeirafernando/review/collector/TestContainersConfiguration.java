@@ -1,23 +1,39 @@
 package com.teixeirafernando.review.collector;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS;
-
+@Testcontainers
 public abstract class TestContainersConfiguration {
 
     @Container
     static LocalStackContainer localStack = new LocalStackContainer(
             DockerImageName.parse("localstack/localstack:3.8.1")
     );
+
+    @BeforeAll
+    static void beforeAll() throws IOException, InterruptedException {
+        //localStack.execInContainer("awslocal", "s3", "mb", "s3://" + BUCKET_NAME);
+        localStack.execInContainer(
+                "awslocal",
+                "sqs",
+                "create-queue",
+                "--queue-name",
+                QUEUE_NAME
+        );
+    }
 
     static final String SQSUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000";
     static final String BUCKET_NAME = UUID.randomUUID().toString();

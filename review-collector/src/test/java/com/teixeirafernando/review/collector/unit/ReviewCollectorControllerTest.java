@@ -36,7 +36,6 @@ class ReviewCollectorControllerTest {
         // Arrange
         Review review = new Review(
                 UUID.randomUUID(),
-                UUID.randomUUID(),
                 "Customer Name",
                 "This is a review content",
                 5.0
@@ -51,7 +50,7 @@ class ReviewCollectorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(review.toString())))
                 .andExpect(status().isOk()) //validate 200 response code
-                .andExpect(jsonPath("$.id").value(review.id().toString())); //validate response body
+                .andExpect(jsonPath("$.id").value(review.getId().toString())); //validate response body
 
         // Verify that the service's publish method was called once
         verify(reviewCollectorService, times(1)).publish(queueName, review);

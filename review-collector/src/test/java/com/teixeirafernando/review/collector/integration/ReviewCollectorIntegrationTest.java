@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({SpringExtension.class})
 @AutoConfigureMockMvc
 @SpringBootTest
-@Testcontainers
 public class ReviewCollectorIntegrationTest extends TestContainersConfiguration{
 
     @Autowired
@@ -42,7 +42,6 @@ public class ReviewCollectorIntegrationTest extends TestContainersConfiguration{
         // Arrange
         Review review = new Review(
                 UUID.randomUUID(),
-                UUID.randomUUID(),
                 "Customer Name",
                 "This is a review content",
                 5.0
@@ -53,7 +52,9 @@ public class ReviewCollectorIntegrationTest extends TestContainersConfiguration{
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Objects.requireNonNull(review.toString())))
                 .andExpect(status().isOk()) //validate 200 response code
-                .andExpect(jsonPath("$.id").value(review.id().toString()));//validate response body
+                .andExpect(jsonPath("$.id").value(review.getId().toString()));//validate response body
+
+        TimeUnit.SECONDS.sleep(5);
 
     }
 }

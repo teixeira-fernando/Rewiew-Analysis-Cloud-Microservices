@@ -18,20 +18,7 @@ import static org.awaitility.Awaitility.await;
 		classes = ReviewCollectorServiceApplication.class,
 		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-@Testcontainers
 class ReviewCollectorServiceApplicationTests extends TestContainersConfiguration {
-
-	@BeforeAll
-	static void beforeAll() throws IOException, InterruptedException {
-		//localStack.execInContainer("awslocal", "s3", "mb", "s3://" + BUCKET_NAME);
-		localStack.execInContainer(
-				"awslocal",
-				"sqs",
-				"create-queue",
-				"--queue-name",
-				QUEUE_NAME
-		);
-	}
 
 	@Autowired
 	ReviewCollectorService reviewCollectorService;
@@ -41,7 +28,7 @@ class ReviewCollectorServiceApplicationTests extends TestContainersConfiguration
 
 	@Test
 	void shouldHandleMessageSuccessfully() {
-		Review review = new Review(UUID.randomUUID(), UUID.randomUUID(), "Customer Name", "that is the content of my review", 5.0);
+		Review review = new Review(UUID.randomUUID(), "Customer Name", "that is the content of my review", 5.0);
 		reviewCollectorService.publish(properties.queue(), review);
 
 		await()
