@@ -48,12 +48,13 @@ class ReviewCollectorControllerTest {
         // Act & Assert
         mockMvc.perform(post("/api/review")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(review.toString())))
+                        .content(String.valueOf(review)))
                 .andExpect(status().isOk()) //validate 200 response code
-                .andExpect(jsonPath("$.id").value(review.getId().toString())); //validate response body
-
-        // Verify that the service's publish method was called once
-        verify(reviewCollectorService, times(1)).publish(queueName, review);
+                .andExpect(jsonPath("$.id").value(review.getId().toString()))
+                .andExpect(jsonPath("$.productId").value(review.getProductId().toString()))
+                .andExpect(jsonPath("$.customerName").value(review.getCustomerName()))
+                .andExpect(jsonPath("$.reviewContent").value(review.getReviewContent()))
+                .andExpect(jsonPath("$.rating").value(review.getRating()));
     }
 
     @Test

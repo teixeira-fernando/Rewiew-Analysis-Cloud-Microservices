@@ -41,7 +41,7 @@ class ReviewCollectorServiceTest {
         ArgumentCaptor<String> queueNameCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
 
-        verify(sqsTemplate, times(1)).sendAsync(queueNameCaptor.capture(), reviewCaptor.capture());
+        verify(sqsTemplate, times(1)).send(queueNameCaptor.capture(), reviewCaptor.capture());
 
         // Assert the captured values
         assertThat(queueName).isEqualTo(queueNameCaptor.getValue(), "Queue name should match");
