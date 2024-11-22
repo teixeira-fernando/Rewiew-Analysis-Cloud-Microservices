@@ -31,7 +31,7 @@ class ReviewCollectorServiceTest {
     void testSendAsyncIsCalledWithCorrectArguments() {
         // Arrange
         String queueName = "test-queue";
-        Review review = new Review(UUID.randomUUID(), UUID.randomUUID(), "Customer Name", "that is the content of my review", 5.0);
+        Review review = new Review(UUID.randomUUID(),"Customer Name", "that is the content of my review", 5.0);
 
         // Act
         reviewCollectorService.publish(queueName, review);
@@ -41,7 +41,7 @@ class ReviewCollectorServiceTest {
         ArgumentCaptor<String> queueNameCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
 
-        verify(sqsTemplate, times(1)).sendAsync(queueNameCaptor.capture(), reviewCaptor.capture());
+        verify(sqsTemplate, times(1)).send(queueNameCaptor.capture(), reviewCaptor.capture());
 
         // Assert the captured values
         assertThat(queueName).isEqualTo(queueNameCaptor.getValue(), "Queue name should match");
