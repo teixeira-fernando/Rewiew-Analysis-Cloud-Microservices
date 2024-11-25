@@ -34,7 +34,7 @@ class ReviewCollectorServiceTest {
         Review review = new Review(UUID.randomUUID(),"Customer Name", "that is the content of my review", 5.0);
 
         // Act
-        reviewCollectorService.publish(queueName, review);
+        reviewCollectorService.publish(queueName, review.toString());
 
         // Assert
         // Capture the arguments passed to sendAsync
