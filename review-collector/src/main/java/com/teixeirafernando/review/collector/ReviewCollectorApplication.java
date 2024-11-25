@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-public class ReviewCollectorServiceApplication {
+public class ReviewCollectorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ReviewCollectorServiceApplication.class, args);
+		SpringApplication.run(ReviewCollectorApplication.class, args);
 	}
 
 }
