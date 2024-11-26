@@ -16,9 +16,9 @@ public class ReviewCollectorService {
         this.sqsTemplate = sqsTemplate;
     }
 
-    public SendResult<Review> publish(String queueName, Review review) {
+    public SendResult<String> publish(String queueName, String jsonReview) {
         try {
-            return sqsTemplate.send(queueName, review);
+            return sqsTemplate.send(queueName, jsonReview);
         }
         catch (Exception ex){
             throw ex;

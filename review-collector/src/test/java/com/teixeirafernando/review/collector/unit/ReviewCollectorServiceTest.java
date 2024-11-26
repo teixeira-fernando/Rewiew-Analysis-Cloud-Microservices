@@ -34,12 +34,12 @@ class ReviewCollectorServiceTest {
         Review review = new Review(UUID.randomUUID(),"Customer Name", "that is the content of my review", 5.0);
 
         // Act
-        reviewCollectorService.publish(queueName, review);
+        reviewCollectorService.publish(queueName, review.toString());
 
         // Assert
         // Capture the arguments passed to sendAsync
         ArgumentCaptor<String> queueNameCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
+        ArgumentCaptor<String> reviewCaptor = ArgumentCaptor.forClass(String.class);
 
         verify(sqsTemplate, times(1)).send(queueNameCaptor.capture(), reviewCaptor.capture());
 

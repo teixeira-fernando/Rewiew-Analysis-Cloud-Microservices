@@ -25,7 +25,7 @@ public class ReviewCollectorController {
     @PostMapping("/api/review")
     public ResponseEntity<Review> create(@RequestBody Review review) {
         try {
-            reviewCollectorService.publish(properties.queue(), review);
+            reviewCollectorService.publish(properties.queue(), review.toString());
 
         } catch (Exception ex){
             return new ResponseEntity(
