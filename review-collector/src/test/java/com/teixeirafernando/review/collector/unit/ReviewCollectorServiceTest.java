@@ -39,7 +39,7 @@ class ReviewCollectorServiceTest {
         // Assert
         // Capture the arguments passed to sendAsync
         ArgumentCaptor<String> queueNameCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
+        ArgumentCaptor<String> reviewCaptor = ArgumentCaptor.forClass(String.class);
 
         verify(sqsTemplate, times(1)).send(queueNameCaptor.capture(), reviewCaptor.capture());
 
