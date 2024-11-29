@@ -13,8 +13,6 @@ import software.amazon.awssdk.services.sqs.model.Message;
 @Service
 public class ReviewAnalyzerMessageListenerService {
 
-    private final String FILE_FORMAT = ".json";
-
     private final SqsTemplate sqsTemplate;
     private final ReviewAnalyzerStorageService storageService;
     private final ApplicationProperties properties;
@@ -33,14 +31,11 @@ public class ReviewAnalyzerMessageListenerService {
     public void handle(Message sqsMessage) throws JsonProcessingException {
         String bucketName = this.properties.bucket();
 
-        //Optional<Message<?>> sqsMessage = this.sqsTemplate.receive();
-        //sqsMessage.get().toString();
-
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(sqsMessage);
         // De-serialize to an object
         AnalyzedReview analyzedReview = mapper.readValue(sqsMessage.body(), AnalyzedReview.class);
-        System.out.println(analyzedReview.getReviewAnalysis()); //John
+        System.out.println(analyzedReview.getReviewAnalysis());
 
 
         String key = analyzedReview.getId().toString();
