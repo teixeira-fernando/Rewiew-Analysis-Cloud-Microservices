@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +29,7 @@ public class ReviewCollectorController {
             reviewCollectorService.publish(properties.queue(), review.toString());
 
         } catch (Exception ex){
-            return new ResponseEntity(
-                    "Incorrect values provided. Please check the values provided", HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error when creating a review. Please check the provided input parameter");
         }
         return ResponseEntity.ok(review);
     }
