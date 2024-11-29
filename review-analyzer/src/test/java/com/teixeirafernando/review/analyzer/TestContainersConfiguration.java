@@ -1,4 +1,4 @@
-package com.teixeirafernando.review.collector;
+package com.teixeirafernando.review.analyzer;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -23,13 +23,25 @@ public abstract class TestContainersConfiguration {
 
     @BeforeAll
     static void beforeAll() throws IOException, InterruptedException {
-        //localStack.execInContainer("awslocal", "s3", "mb", "s3://" + BUCKET_NAME);
+        localStack.execInContainer("awslocal", "s3", "mb", "s3://" + BUCKET_NAME);
         localStack.execInContainer(
                 "awslocal",
                 "sqs",
                 "create-queue",
                 "--queue-name",
                 QUEUE_NAME
+        );
+    }
+
+    protected void insertTestDataToSQSQueue(String testData) throws IOException, InterruptedException {
+        localStack.execInContainer(
+                "awslocal",
+                "sqs",
+                "send-message",
+                "--queue-url",
+                SQSUrl,
+                "--message-body",
+                testData
         );
     }
 
@@ -61,5 +73,29 @@ public abstract class TestContainersConfiguration {
                 "spring.cloud.aws.sqs.endpoint",
                 () -> localStack.getEndpointOverride(SQS).toString()
         );
+
+        System.setProperty("app.bucket", BUCKET_NAME);
+        System.setProperty("app.queue", QUEUE_NAME);
+        System.setProperty(
+                "spring.cloud.aws.region.static",
+                localStack.getRegion()
+        );
+        System.setProperty(
+                "spring.cloud.aws.credentials.access-key",
+                localStack.getAccessKey()
+        );
+        System.setProperty(
+                "spring.cloud.aws.credentials.secret-key",
+                localStack.getSecretKey()
+        );
+        System.setProperty(
+                "spring.cloud.aws.s3.endpoint",
+                localStack.getEndpointOverride(S3).toString()
+        );
+        System.setProperty(
+                "spring.cloud.aws.sqs.endpoint",
+                localStack.getEndpointOverride(SQS).toString()
+        );
     }
 }
+

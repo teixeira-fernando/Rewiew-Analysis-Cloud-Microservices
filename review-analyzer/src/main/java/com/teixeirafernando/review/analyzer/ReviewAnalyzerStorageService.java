@@ -4,6 +4,8 @@ import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+
 @Service
 public class ReviewAnalyzerStorageService {
 
@@ -17,7 +19,7 @@ public class ReviewAnalyzerStorageService {
         this.s3Template.upload(bucketName, key, stream);
     }
 
-    public boolean reviewExists(String bucketName, String key){
+    public boolean reviewExists(String bucketName, String key) throws NoSuchKeyException {
         return this.s3Template.objectExists(bucketName, key);
     }
 
