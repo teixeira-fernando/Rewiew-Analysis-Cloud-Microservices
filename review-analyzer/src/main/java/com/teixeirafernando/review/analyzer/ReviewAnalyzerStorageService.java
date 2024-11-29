@@ -17,6 +17,10 @@ public class ReviewAnalyzerStorageService {
         this.s3Template.upload(bucketName, key, stream);
     }
 
+    public boolean reviewExists(String bucketName, String key){
+        return this.s3Template.objectExists(bucketName, key);
+    }
+
     public InputStream download(String bucketName, String key)
             throws IOException {
         return this.s3Template.download(bucketName, key).getInputStream();

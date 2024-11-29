@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import io.awspring.cloud.sqs.operations.SqsTemplate;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sqs.model.Message;
 
@@ -49,7 +47,7 @@ public class ReviewAnalyzerMessageListenerService {
         ByteArrayInputStream is = new ByteArrayInputStream(
                 analyzedReview.toString().getBytes(StandardCharsets.UTF_8)
         );
-        this.storageService.upload(bucketName, key+FILE_FORMAT, is);
+        this.storageService.upload(bucketName, key, is);
         System.out.println("Uploaded File "+key+"to bucket "+bucketName);
     }
 }

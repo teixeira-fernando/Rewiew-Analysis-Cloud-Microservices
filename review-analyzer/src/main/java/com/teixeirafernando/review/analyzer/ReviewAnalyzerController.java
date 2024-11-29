@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Map;
 
 @RestController
 public class ReviewAnalyzerController {
@@ -21,9 +20,8 @@ public class ReviewAnalyzerController {
         this.properties = properties;
     }
 
-    @GetMapping("/api/messages/{uuid}")
-    public Map<String, String> get(@PathVariable String id) throws IOException {
-        String content = storageService.downloadAsString(properties.bucket(), id);
-        return Map.of("id", id, "content", content);
+    @GetMapping(value = "/api/messages/{id}",  produces = { "application/json" })
+    public String get(@PathVariable String id) throws IOException {
+        return storageService.downloadAsString(properties.bucket(), id);
     }
 }
