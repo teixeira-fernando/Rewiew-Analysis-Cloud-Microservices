@@ -54,7 +54,5 @@ public class ReviewCollectorIntegrationTest extends TestContainersConfiguration{
                 .andExpect(status().isOk()) //validate 200 response code
                 .andExpect(jsonPath("$.id").value(review.getId().toString()));//validate response body
 
-        TimeUnit.SECONDS.sleep(5);
-
     }
 }
