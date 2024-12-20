@@ -4,18 +4,15 @@ import com.teixeirafernando.review.analyzer.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 import java.io.IOException;
+import java.time.Duration;
 
-@ExtendWith({SpringExtension.class})
-@AutoConfigureMockMvc
 @SpringBootTest
 public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
 
@@ -40,21 +37,13 @@ public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
                 }
                 """);
 
-        /*await()
+        await()
                 .pollInterval(Duration.ofSeconds(2))
                 .atMost(Duration.ofSeconds(10))
                 .ignoreExceptions()
                 .untilAsserted(() -> {
-                            JSONObject messageFromSQS = new JSONObject(localStack.execInContainer(
-                                    "awslocal",
-                                    "sqs",
-                                    "receive-message",
-                                    "--queue-url",
-                                    SQSUrl + "/" + QUEUE_NAME
-                            ).getStdout());
-                        });*/
-
-        Thread.sleep(5000);
+                    this.reviewAnalyzerStorageService.reviewExists(TestContainersConfiguration.BUCKET_NAME, "e921412f-af4b-4b1f-bec4-734982b2fb9c");
+                        });
 
 
         boolean bucketExists = this.reviewAnalyzerStorageService.bucketExists(TestContainersConfiguration.BUCKET_NAME);
@@ -65,6 +54,8 @@ public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
         assertThat(reviewExists).isTrue();
         assertThat(review.getString("id")).isEqualTo("e921412f-af4b-4b1f-bec4-734982b2fb9c");
         assertThat(review.getString("reviewAnalysis")).isNotNull();
+
+        System.out.println("Value of queue-name:"+TestContainersConfiguration.QUEUE_NAME);
 
     }
 }
