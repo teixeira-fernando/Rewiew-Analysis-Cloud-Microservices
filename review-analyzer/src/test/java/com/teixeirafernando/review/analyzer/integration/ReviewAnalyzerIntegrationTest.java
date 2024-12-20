@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import software.amazon.awssdk.services.sqs.model.Message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -13,13 +15,16 @@ import static org.awaitility.Awaitility.await;
 import java.io.IOException;
 import java.time.Duration;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+
 @SpringBootTest
 public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
 
     @Autowired
     ReviewAnalyzerStorageService reviewAnalyzerStorageService;
 
-    @Autowired
+    @SpyBean
     ReviewAnalyzerMessageListenerService reviewAnalyzerMessageListenerService;
 
     @Autowired
@@ -42,7 +47,7 @@ public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
                 .atMost(Duration.ofSeconds(10))
                 .ignoreExceptions()
                 .untilAsserted(() -> {
-                    this.reviewAnalyzerStorageService.reviewExists(TestContainersConfiguration.BUCKET_NAME, "e921412f-af4b-4b1f-bec4-734982b2fb9c");
+                    verify(reviewAnalyzerMessageListenerService).handle(any(Message.class));
                         });
 
 
