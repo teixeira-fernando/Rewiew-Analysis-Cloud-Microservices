@@ -12,7 +12,9 @@ import software.amazon.awssdk.services.sqs.model.Message;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +33,7 @@ public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
     ApplicationProperties properties;
 
     @Test
-    void shouldProcessMessagesInTheQueueSuccessfully() throws IOException, InterruptedException, JSONException {
+    void shouldProcessMessagesInTheQueueSuccessfullyAndPushToS3Bucket() throws IOException, InterruptedException, JSONException {
         this.insertTestDataToSQSQueue("""
                 {
                     "id": "e921412f-af4b-4b1f-bec4-734982b2fb9c",
