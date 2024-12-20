@@ -1,5 +1,6 @@
-package com.teixeirafernando.review.collector;
+package com.teixeirafernando.review.collector.integration;
 
+import com.teixeirafernando.review.collector.*;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static org.awaitility.Awaitility.await;
 		classes = ReviewCollectorApplication.class,
 		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-class ReviewCollectorApplicationTests extends TestContainersConfiguration {
+class ReviewCollectorServiceIntegrationTest extends TestContainersConfiguration {
 
 	@Autowired
 	ReviewCollectorService reviewCollectorService;

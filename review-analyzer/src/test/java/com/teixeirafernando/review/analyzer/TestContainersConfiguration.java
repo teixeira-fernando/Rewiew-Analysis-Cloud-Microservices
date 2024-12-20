@@ -1,4 +1,4 @@
-package com.teixeirafernando.review.collector;
+package com.teixeirafernando.review.analyzer;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -23,13 +23,25 @@ public abstract class TestContainersConfiguration {
 
     @BeforeAll
     static void beforeAll() throws IOException, InterruptedException {
-        //localStack.execInContainer("awslocal", "s3", "mb", "s3://" + BUCKET_NAME);
+        localStack.execInContainer("awslocal", "s3", "mb", "s3://" + BUCKET_NAME);
         localStack.execInContainer(
                 "awslocal",
                 "sqs",
                 "create-queue",
                 "--queue-name",
                 QUEUE_NAME
+        );
+    }
+
+    protected void insertTestDataToSQSQueue(String testData) throws IOException, InterruptedException {
+        localStack.execInContainer(
+                "awslocal",
+                "sqs",
+                "send-message",
+                "--queue-url",
+                SQSUrl +"/"+QUEUE_NAME,
+                "--message-body",
+                testData
         );
     }
 
@@ -63,3 +75,4 @@ public abstract class TestContainersConfiguration {
         );
     }
 }
+
