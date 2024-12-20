@@ -1,8 +1,11 @@
 package com.teixeirafernando.review.analyzer;
 
+import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.SequencedCollection;
+
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
@@ -21,6 +24,14 @@ public class ReviewAnalyzerStorageService {
 
     public boolean reviewExists(String bucketName, String key) throws NoSuchKeyException {
         return this.s3Template.objectExists(bucketName, key);
+    }
+
+    public boolean bucketExists(String bucketName){
+        return this.s3Template.bucketExists(bucketName);
+    }
+    
+    public SequencedCollection<S3Resource> listObjects(String bucketName, String prefix){
+        return this.s3Template.listObjects(bucketName, prefix);
     }
 
     public InputStream download(String bucketName, String key)

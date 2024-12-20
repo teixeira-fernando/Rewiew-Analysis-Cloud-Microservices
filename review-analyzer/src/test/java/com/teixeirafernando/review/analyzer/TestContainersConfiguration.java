@@ -39,7 +39,7 @@ public abstract class TestContainersConfiguration {
                 "sqs",
                 "send-message",
                 "--queue-url",
-                SQSUrl,
+                SQSUrl +"/"+QUEUE_NAME,
                 "--message-body",
                 testData
         );
