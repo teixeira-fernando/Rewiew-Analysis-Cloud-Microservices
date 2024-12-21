@@ -1,9 +1,13 @@
 package com.teixeirafernando.review.analyzer.integration;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.teixeirafernando.review.analyzer.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -14,7 +18,9 @@ import static org.awaitility.Awaitility.await;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -45,7 +51,6 @@ public class ReviewAnalyzerServiceIntegrationTest extends TestContainersConfigur
         await()
                 .pollInterval(Duration.ofSeconds(2))
                 .atMost(Duration.ofSeconds(10))
-                .ignoreExceptions()
                 .untilAsserted(() -> {
                     verify(reviewAnalyzerMessageListenerService).handle(any(Message.class));
                         });
@@ -62,5 +67,46 @@ public class ReviewAnalyzerServiceIntegrationTest extends TestContainersConfigur
 
         System.out.println("Value of queue-name:"+TestContainersConfiguration.QUEUE_NAME);
 
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMessagesForTest")
+    void shouldRejectMessagesWithMissingFieldsOrIncorrectFormat(String id, String message) throws IOException, InterruptedException, JSONException {
+        this.insertTestDataToSQSQueue("""
+                {
+                    "id": "b9f2d265-fe7e-48e9-bf6d-f250502cd068",
+                }
+                """);
+
+        await()
+                .pollInterval(Duration.ofSeconds(2))
+                .atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> {
+                    assertThrows(MessageProcessingException.class, () -> reviewAnalyzerMessageListenerService.handle(any(Message.class)));
+                });
+
+        boolean bucketExists = this.reviewAnalyzerStorageService.bucketExists(TestContainersConfiguration.BUCKET_NAME);
+        boolean reviewExists = this.reviewAnalyzerStorageService.reviewExists(TestContainersConfiguration.BUCKET_NAME, "b9f2d265-fe7e-48e9-bf6d-f250502cd068");
+
+        assertThat(bucketExists).isTrue();
+        assertThat(reviewExists).isFalse();
+    }
+
+    private static Stream<Arguments> provideMessagesForTest() {
+        return Stream.of(
+                Arguments.of("b9f2d265-fe7e-48e9-bf6d-f250502cd068", """
+                {
+                    "id": "b9f2d265-fe7e-48e9-bf6d-f250502cd068",
+                }
+                """),
+                Arguments.of("af71ea56-d1df-4316-ac97-3ca836852d22", """
+                {
+                    "id": "af71ea56-d1df-4316-ac97-3ca836852d22",
+                    "productId": "da6037a6-a375-40e2-a8a6-1bb5f9448df0",
+                    "rating": 5.0
+                }
+                """),
+                Arguments.of("", "{}")
+        );
     }
 }
