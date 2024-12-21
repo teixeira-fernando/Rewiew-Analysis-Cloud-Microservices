@@ -12,16 +12,14 @@ import software.amazon.awssdk.services.sqs.model.Message;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
-public class ReviewAnalyzerIntegrationTest extends TestContainersConfiguration {
+public class ReviewAnalyzerServiceIntegrationTest extends TestContainersConfiguration {
 
     @Autowired
     ReviewAnalyzerStorageService reviewAnalyzerStorageService;
