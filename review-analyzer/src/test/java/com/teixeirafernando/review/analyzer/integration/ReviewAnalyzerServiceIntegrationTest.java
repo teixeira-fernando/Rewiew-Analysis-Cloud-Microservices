@@ -82,7 +82,7 @@ public class ReviewAnalyzerServiceIntegrationTest extends TestContainersConfigur
                 .pollInterval(Duration.ofSeconds(2))
                 .atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> {
-                    assertThrows(JsonParseException.class, () -> reviewAnalyzerMessageListenerService.handle(any(Message.class)));
+                    assertThrows(MessageProcessingException.class, () -> reviewAnalyzerMessageListenerService.handle(any(Message.class)));
                 });
 
         boolean bucketExists = this.reviewAnalyzerStorageService.bucketExists(TestContainersConfiguration.BUCKET_NAME);

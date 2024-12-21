@@ -1,10 +1,7 @@
 package com.teixeirafernando.review.analyzer.unit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.teixeirafernando.review.analyzer.AnalyzedReview;
-import com.teixeirafernando.review.analyzer.ApplicationProperties;
-import com.teixeirafernando.review.analyzer.ReviewAnalyzerMessageListenerService;
-import com.teixeirafernando.review.analyzer.ReviewAnalyzerStorageService;
+import com.teixeirafernando.review.analyzer.*;
 import io.awspring.cloud.s3.S3Template;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +49,7 @@ public class ReviewAnalyzerMessageListenerServiceTest
     }
 
     @Test
-    void testSendAsyncIsCalledWithCorrectArguments() throws IOException {
+    void testSendAsyncIsCalledWithCorrectArguments() throws IOException, MessageProcessingException {
         // Arrange
         UUID id = UUID.randomUUID();
         String bucketName = this.properties.bucket();

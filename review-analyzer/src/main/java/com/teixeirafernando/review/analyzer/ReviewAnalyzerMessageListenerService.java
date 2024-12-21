@@ -29,7 +29,7 @@ public class ReviewAnalyzerMessageListenerService {
     }
 
     @SqsListener(queueNames = { "${app.queue}" })
-    public void handle(Message sqsMessage) throws JsonProcessingException {
+    public void handle(Message sqsMessage) throws JsonProcessingException, MessageProcessingException {
         String bucketName = this.properties.bucket();
         ObjectMapper mapper = new ObjectMapper();
 
@@ -40,7 +40,7 @@ public class ReviewAnalyzerMessageListenerService {
             analyzedReview = mapper.readValue(sqsMessage.body(), AnalyzedReview.class);
         }
         catch (Exception ex){
-            throw new JsonParseException("Failure to process the Message in SQS queue. The reason could be that the message format is not correct.");
+            throw new MessageProcessingException("Failure to process the Message in SQS queue. The reason could be that the message format is not correct.");
         }
 
         System.out.println(analyzedReview.toString());
