@@ -1,5 +1,7 @@
 package com.teixeirafernando.review.analyzer;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +23,13 @@ public class ReviewAnalyzerController {
     }
 
     @GetMapping(value = "/api/messages/{id}",  produces = { "application/json" })
-    public String get(@PathVariable String id) throws IOException {
-        return storageService.downloadAsString(properties.bucket(), id);
+    public ResponseEntity<String> get(@PathVariable String id) throws IOException {
+        if (storageService.reviewExists(properties.bucket(), id)){
+            return ResponseEntity.ok(storageService.downloadAsString(properties.bucket(), id));
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Analyzed Review with the provided id was not found. Please check if the id is correct.");
+        }
+
     }
 }
