@@ -1,5 +1,6 @@
 package com.teixeirafernando.review.analyzer;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
@@ -30,12 +31,19 @@ public class ReviewAnalyzerMessageListenerService {
     @SqsListener(queueNames = { "${app.queue}" })
     public void handle(Message sqsMessage) throws JsonProcessingException {
         String bucketName = this.properties.bucket();
-
         ObjectMapper mapper = new ObjectMapper();
-        System.out.println(sqsMessage);
+
+        AnalyzedReview analyzedReview;
+
         // De-serialize to an object
-        AnalyzedReview analyzedReview = mapper.readValue(sqsMessage.body(), AnalyzedReview.class);
-        System.out.println(analyzedReview.getReviewAnalysis());
+        try {
+            analyzedReview = mapper.readValue(sqsMessage.body(), AnalyzedReview.class);
+        }
+        catch (Exception ex){
+            throw new JsonParseException("Failure to process the Message in SQS queue. The reason could be that the message format is not correct.");
+        }
+
+        System.out.println(analyzedReview.toString());
 
 
         String key = analyzedReview.getId().toString();

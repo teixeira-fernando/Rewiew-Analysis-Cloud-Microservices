@@ -1,5 +1,6 @@
 package com.teixeirafernando.review.analyzer.integration;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.teixeirafernando.review.analyzer.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +15,9 @@ import static org.awaitility.Awaitility.await;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.concurrent.CompletionException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -45,7 +48,6 @@ public class ReviewAnalyzerServiceIntegrationTest extends TestContainersConfigur
         await()
                 .pollInterval(Duration.ofSeconds(2))
                 .atMost(Duration.ofSeconds(10))
-                .ignoreExceptions()
                 .untilAsserted(() -> {
                     verify(reviewAnalyzerMessageListenerService).handle(any(Message.class));
                         });
@@ -62,5 +64,27 @@ public class ReviewAnalyzerServiceIntegrationTest extends TestContainersConfigur
 
         System.out.println("Value of queue-name:"+TestContainersConfiguration.QUEUE_NAME);
 
+    }
+
+    @Test
+    void shouldRejectMessagesWithMissingFieldsOrIncorrectFormat() throws IOException, InterruptedException, JSONException {
+        this.insertTestDataToSQSQueue("""
+                {
+                    "id": "b9f2d265-fe7e-48e9-bf6d-f250502cd068",
+                }
+                """);
+
+        await()
+                .pollInterval(Duration.ofSeconds(2))
+                .atMost(Duration.ofSeconds(10))
+                .untilAsserted(() -> {
+                    assertThrows(JsonParseException.class, () -> reviewAnalyzerMessageListenerService.handle(any(Message.class)));
+                });
+
+        boolean bucketExists = this.reviewAnalyzerStorageService.bucketExists(TestContainersConfiguration.BUCKET_NAME);
+        boolean reviewExists = this.reviewAnalyzerStorageService.reviewExists(TestContainersConfiguration.BUCKET_NAME, "b9f2d265-fe7e-48e9-bf6d-f250502cd068");
+
+        assertThat(bucketExists).isTrue();
+        assertThat(reviewExists).isFalse();
     }
 }
